@@ -1,138 +1,173 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>Kaito Leaderboard</title>
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: #f4f6f8;
-            margin: 0; padding: 0;
-        }
-        header {
-            background: #111827;
-            color: #fff;
-            padding: 1.5rem;
-            text-align: center;
-            font-size: 1.5rem;
-        }
-        .dropdown-container {
-            display: flex;
-            justify-content: center;
-            gap: 1rem;
-            padding: 1.5rem;
-            background: #fff;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-            flex-wrap: wrap;
-        }
-        select, button {
-            padding: 0.6rem 1rem;
-            font-size: 1rem;
-            border-radius: 8px;
-            border: 1px solid #ccc;
-            background: #fff;
-            min-width: 150px;
-        }
-        button {
-            background-color: #3b82f6;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #2563eb;
-        }
-        .container {
-            max-width: 1000px;
-            margin: 2rem auto;
-            padding: 0 1rem;
-        }
-        .user-card {
-            display: flex;
-            background: #fff;
-            margin-bottom: 1rem;
-            padding: 1rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
-        }
-        .user-card img {
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            margin-right: 1rem;
-            object-fit: cover;
-        }
-        .user-details {
-            flex: 1;
-        }
-        .user-details h2 {
-            margin: 0;
-            font-size: 1.1rem;
-        }
-        .user-details p {
-            margin: 0.2rem 0;
-            color: #444;
-            font-size: 0.9rem;
-        }
-        .user-details a {
-            color: #3b82f6;
-            text-decoration: none;
-            font-size: 0.9rem;
-        }
-        footer {
-            text-align: center;
-            color: #888;
-            font-size: 0.9rem;
-            margin-top: 2rem;
-            padding-bottom: 2rem;
-        }
-    </style>
+<meta charset="UTF-8" />
+<title>Kaito Leaderboard</title>
+<style>
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background: #f4f6f8;
+    margin: 0; padding: 0;
+  }
+  header {
+    background: #111827;
+    color: white;
+    padding: 1.5rem;
+    text-align: center;
+    font-size: 1.5rem;
+  }
+  .filter-bar {
+    background: white;
+    padding: 1rem;
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  select, input[type="text"], button {
+    padding: 0.6rem 1rem;
+    font-size: 1rem;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    min-width: 150px;
+  }
+  input[type="text"] {
+    min-width: 250px;
+  }
+  button {
+    background: #3b82f6;
+    color: white;
+    border: none;
+    cursor: pointer;
+    transition: background 0.3s;
+  }
+  button:hover {
+    background: #2563eb;
+  }
+  .container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  .user-card {
+    display: flex;
+    background: white;
+    margin-bottom: 1rem;
+    padding: 1rem;
+    border-radius: 12px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+  }
+  .user-card img {
+    width: 64px;
+    height: 64px;
+    border-radius: 50%;
+    margin-right: 1rem;
+    object-fit: cover;
+  }
+  .user-details {
+    flex: 1;
+  }
+  .user-details h2 {
+    margin: 0;
+    font-size: 1.1rem;
+  }
+  .user-details p {
+    margin: 0.2rem 0;
+    color: #444;
+    font-size: 0.9rem;
+  }
+  .user-details a {
+    color: #3b82f6;
+    text-decoration: none;
+    font-size: 0.9rem;
+  }
+  footer {
+    text-align: center;
+    color: #888;
+    font-size: 0.9rem;
+    margin-top: 2rem;
+    padding-bottom: 2rem;
+  }
+  .no-results {
+    text-align: center;
+    color: #888;
+    margin-top: 2rem;
+  }
+</style>
 </head>
 <body>
-    <header>📊 Kaito Leaderboard — Top 100 Yappers</header>
 
-    <div class="dropdown-container">
-        <form method="get">
-            <label for="topic">Topic:</label>
-            <select name="topic" id="topic">
-                {% for t in topics %}
-                    <option value="{{ t }}" {% if t == topic %}selected{% endif %}>{{ t }}</option>
-                {% endfor %}
-            </select>
+<header>📊 Kaito Leaderboard — Top 100 Users</header>
 
-            <label for="duration">Duration:</label>
-            <select name="duration" id="duration">
-                {% for d in durations %}
-                    <option value="{{ d }}" {% if d == duration %}selected{% endif %}>{{ d }}</option>
-                {% endfor %}
-            </select>
+<div class="filter-bar">
+  <form method="get" id="filterForm" onsubmit="return true;">
+    <select name="topic" id="topic" onchange="document.getElementById('filterForm').submit()">
+      {% for t in topics %}
+        <option value="{{ t }}" {% if t == topic %}selected{% endif %}>{{ t }}</option>
+      {% endfor %}
+    </select>
 
-            <button type="submit">GO</button>
-        </form>
+    <select name="duration" id="duration" onchange="document.getElementById('filterForm').submit()">
+      {% for d in durations %}
+        <option value="{{ d }}" {% if d == duration %}selected{% endif %}>{{ d }}</option>
+      {% endfor %}
+    </select>
+
+    <input
+      type="text"
+      id="searchInput"
+      placeholder="Search users by name or username"
+      oninput="filterUsers()"
+    />
+    
+  </form>
+</div>
+
+<div class="container" id="userContainer">
+  {% for user in users %}
+    <div class="user-card" data-username="{{ user.username|lower }}" data-name="{{ user.name|lower }}">
+      <img src="{{ user.icon }}" alt="{{ user.username }}" />
+      <div class="user-details">
+        <h2>@{{ user.username }}</h2>
+        <p><strong>Name:</strong> {{ user.name }}</p>
+        <p><strong>Rank:</strong> {{ user.rank }}</p>
+        <p><strong>Mentions:</strong> {{ user.mention_count }}</p>
+        <p><strong>Smart Followers:</strong> {{ user.smart_follower_count }}</p>
+        <p><strong>Followers:</strong> {{ "{:,}".format(user.follower_count or 0) }}</p>
+        <p><strong>Bio:</strong> {{ user.bio or "No bio available" }}</p>
+        <a href="{{ user.twitter_user_url }}" target="_blank">View Twitter →</a>
+      </div>
     </div>
+  {% endfor %}
+</div>
 
-    <div class="container">
-        {% for user in users %}
-            <div class="user-card">
-                <img src="{{ user.icon }}" alt="{{ user.username }}" />
-                <div class="user-details">
-                    <h2>@{{ user.username }}</h2>
-                    <p><strong>Name:</strong> {{ user.name }}</p>
-                    <p><strong>Rank:</strong> {{ user.rank }}</p>
-                    <p><strong>Mentions:</strong> {{ user.mention_count }}</p>
-                    <p><strong>Smart Followers:</strong> {{ user.smart_follower_count }}</p>
-                    <p><strong>Followers:</strong> {{ "{:,}".format(user.follower_count or 0) }}</p>
-                    <p><strong>Bio:</strong> {{ user.bio or "No bio available" }}</p>
-                    <a href="{{ user.twitter_user_url }}" target="_blank">View Twitter →</a>
-                </div>
-            </div>
-        {% else %}
-            <p>No users found for this topic and duration.</p>
-        {% endfor %}
-    </div>
+<p id="noResultsMsg" class="no-results" style="display:none;">No users found.</p>
 
-    <footer>
-        Built with ❤️ using Kaito API | Topic: {{ topic }} | Duration: {{ duration.upper() }}
-    </footer>
+<footer>
+  Built with ❤️ using Kaito API | Topic: {{ topic }} | Duration: {{ duration.upper() }}
+</footer>
+
+<script>
+function filterUsers() {
+  const input = document.getElementById('searchInput').value.toLowerCase();
+  const users = document.querySelectorAll('#userContainer .user-card');
+  let visibleCount = 0;
+
+  users.forEach(user => {
+    const username = user.getAttribute('data-username');
+    const name = user.getAttribute('data-name');
+    if (username.includes(input) || name.includes(input)) {
+      user.style.display = 'flex';
+      visibleCount++;
+    } else {
+      user.style.display = 'none';
+    }
+  });
+
+  document.getElementById('noResultsMsg').style.display = visibleCount === 0 ? 'block' : 'none';
+}
+</script>
+
 </body>
 </html>

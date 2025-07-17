@@ -28,7 +28,6 @@ def fetch_leaderboard(topic_id, duration, top_n=200):
         "User-Agent": "Mozilla/5.0",
         "Accept": "application/json"
     }
-
     try:
         response = requests.get(url, params=params, headers=headers)
         response.raise_for_status()
