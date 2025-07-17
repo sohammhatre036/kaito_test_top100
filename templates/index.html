@@ -19,38 +19,36 @@
             font-size: 1.5rem;
         }
 
-        .tabs {
+        .dropdown-container {
             display: flex;
             justify-content: center;
             gap: 1rem;
-            background: #1f2937;
-            padding: 1rem 0;
+            padding: 1.5rem;
+            background: #ffffff;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+            flex-wrap: wrap;
         }
 
-        .tabs a {
-            color: #d1d5db;
-            padding: 0.5rem 1rem;
-            text-decoration: none;
-            border-radius: 6px;
-            transition: 0.3s;
-        }
-
-        .tabs a.active,
-        .tabs a:hover {
-            background-color: #374151;
-            color: white;
-        }
-
-        .dropdown-container {
-            text-align: center;
-            margin-top: 1rem;
-        }
-
-        .dropdown-container select {
-            padding: 0.5rem;
+        .dropdown-container select,
+        .dropdown-container button {
+            padding: 0.6rem 1rem;
             font-size: 1rem;
-            border-radius: 6px;
+            border-radius: 8px;
             border: 1px solid #ccc;
+            background: #fff;
+            min-width: 150px;
+        }
+
+        .dropdown-container button {
+            background-color: #3b82f6;
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .dropdown-container button:hover {
+            background-color: #2563eb;
         }
 
         .container {
@@ -113,27 +111,30 @@
     </header>
 
     <div class="dropdown-container">
-        <form method="get">
-            <label for="topic">Topic:</label>
-            <select name="topic" id="topic">
-                {% for t in topics %}
-                    <option value="{{ t }}" {% if t == topic %}selected{% endif %}>{{ t }}</option>
-                {% endfor %}
-            </select>
+        <form method="get" style="display: flex; gap: 1rem; flex-wrap: wrap;">
+            <div>
+                <label for="topic">Topic:</label><br>
+                <select name="topic" id="topic">
+                    {% for t in topics %}
+                        <option value="{{ t }}" {% if t == topic %}selected{% endif %}>{{ t }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-            <label for="duration">Duration:</label>
-            <select name="duration" id="duration">
-                {% for d in durations %}
-                    <option value="{{ d }}" {% if d == duration %}selected{% endif %}>{{ d }}</option>
-                {% endfor %}
-            </select>
+            <div>
+                <label for="duration">Duration:</label><br>
+                <select name="duration" id="duration">
+                    {% for d in durations %}
+                        <option value="{{ d }}" {% if d == duration %}selected{% endif %}>{{ d }}</option>
+                    {% endfor %}
+                </select>
+            </div>
 
-            <button type="submit">Go</button>
+            <div style="align-self: flex-end;">
+                <button type="submit">GO</button>
+            </div>
         </form>
     </div>
-
-  
-
 
     <div class="container">
         {% for user in users %}

@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 def fetch_kaito_data(topic, duration):
     try:
-        folder = "kaito_data" if topic == "HANAHANA" else "kaito_data_anoma"
+        folder = os.path.join("kaito_data", topic.lower())  # e.g., kaito_data/hanahana
         file_path = os.path.join(folder, f"data_{topic}_{duration}.json")
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
@@ -17,11 +17,9 @@ def fetch_kaito_data(topic, duration):
 
 @app.route("/")
 def index():
-    # Defaults
     duration = request.args.get('duration', '7d')
     topic = request.args.get('topic', 'HANAHANA')
 
-    # Fetch users
     users = fetch_kaito_data(topic, duration)
 
     return render_template(
@@ -30,7 +28,7 @@ def index():
         duration=duration,
         topic=topic,
         durations=['7d', '30d', '3m', '6m'],
-        topics=['HANAHANA', 'ANOMA']
+        topics=['HANAHANA', 'ANOMA', 'BLS']  # Now includes BLS too
     )
 
 if __name__ == "__main__":
