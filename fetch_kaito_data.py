@@ -1,57 +1,54 @@
 import requests
-import json
 import os
+import json
 
-def fetch_kaito_leaderboard(topic_id, duration, subfolder):
+TOPIC_IDS = [
+    "0G","ALLORA","ANOMA",
+    "BLS","BOUNDLESS","CALDERA","CAMP","CYSIC",
+    "FOGO","FRAX","HANAHANA","GOATNETWORK",
+    "HUMANITY","INFINEX","INFINIT""IQ","IRYS","KAIA","KAT","LOMBARD",
+    "LUMITERRA","MEGAETH","MEMEX","MIRA","MITOSIS","MONAD","MULTIBANK","MULTIPLI","NYT","NOYA","OPENLEDGER","PARADEX","PORTALPORTAL","PUFFPAW",
+    "SATLAYER","SIDEKICK","SOMNIA","SO","SUCCINCT","SURF","SYMPHONY","THEORIQ","THRIVE","TURTLECLUB","UNION"
+    ,"YEET","ZEC"
+]
+
+# Added '12m' here
+DURATIONS = ['7d', '30d', '3m', '6m', '12m']
+
+def fetch_leaderboard(topic_id, duration):
     url = "https://hub.kaito.ai/api/v1/gateway/ai/kol/mindshare/top-leaderboard"
     params = {
-        'duration': duration,
-        'topic_id': topic_id,
-        'top_n': 200,  # 🔧 Set to 200 users
-        'customized_community': 'customized',
-        'community_yaps': True
+        "topic_id": topic_id,
+        "duration": duration,
+        "top_n": 200,
+        "customized_community": "customized",
+        "community_yaps": True
     }
     headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)',
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json"
     }
+
+    folder = os.path.join("kaito_data", topic_id.lower())
+    os.makedirs(folder, exist_ok=True)
 
     try:
-        print(f"🔄 Fetching data for topic: {topic_id} | duration: {duration}")
-        folder_path = os.path.join("kaito_data", subfolder)
-        os.makedirs(folder_path, exist_ok=True)
-
+        print(f"🔄 Fetching {topic_id} | {duration}")
         response = requests.get(url, params=params, headers=headers)
-
-        if response.status_code == 200:
+        if response.ok:
             data = response.json()
-            file_path = os.path.join(folder_path, f"data_{topic_id}_{duration}.json")
+            file_path = os.path.join(folder, f"data_{topic_id}_{duration}.json")
             with open(file_path, "w", encoding="utf-8") as f:
                 json.dump(data, f, indent=2, ensure_ascii=False)
-            print(f"✅ Saved to '{file_path}' ({len(data)} records)")
+            print(f"✅ Saved: {file_path} ({len(data)} records)")
         else:
-            print(f"❌ Failed for {topic_id} {duration} | Status: {response.status_code}")
-            print(response.text)
-
+            print(f"❌ Error {response.status_code}: {response.text}")
     except Exception as e:
-        print(f"❌ Error for {topic_id} {duration}: {e}")
-
+        print(f"❌ Exception fetching {topic_id} {duration}: {e}")
 
 if __name__ == "__main__":
-    print("🚀 Fetching Kaito Leaderboard Data...")
-    print("=" * 40)
-
-    durations = ['7d', '30d', '3m', '6m']
-
-    topics = {
-        "HANAHANA": "hanahana",
-        "ANOMA": "anoma",
-        "BLS": "bls"
-    }
-
-    for topic_id, folder in topics.items():
-        for duration in durations:
-            fetch_kaito_leaderboard(topic_id, duration, folder)
-
-    print("\n✅ All data fetched successfully!")
+    print("🚀 Fetching Kaito Leaderboard Data...\n" + "=" * 40)
+    for topic_id in TOPIC_IDS:
+        for duration in DURATIONS:
+            fetch_leaderboard(topic_id, duration)
+    print("\n✅ All done!")

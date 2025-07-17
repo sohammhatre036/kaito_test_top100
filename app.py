@@ -1,34 +1,56 @@
 from flask import Flask, render_template, request
-import json
-import os
+import requests
 
 app = Flask(__name__)
 
-def fetch_kaito_data(topic, duration):
+TOPIC_IDS = [
+    "0G","ALLORA","ANOMA",
+    "BLS","BOUNDLESS","CALDERA","CAMP","CYSIC",
+    "FOGO","FRAX","HANAHANA","GOATNETWORK",
+    "HUMANITY","INFINEX","INFINIT","IQ","IRYS","KAIA","KAT","LOMBARD",
+    "LUMITERRA","MEGAETH","MEMEX","MIRA","MITOSIS","MONAD","MULTIBANK","MULTIPLI","NYT","NOYA","OPENLEDGER","PARADEX","PORTALPORTAL","PUFFPAW",
+    "SATLAYER","SIDEKICK","SOMNIA","SO","SUCCINCT","SURF","SYMPHONY","THEORIQ","THRIVE","TURTLECLUB","UNION",
+    "YEET","ZEC"
+]
+
+DURATIONS = ['7d', '30d', '3m', '6m', '12m']
+
+def fetch_leaderboard(topic_id, duration, top_n=200):
+    url = "https://hub.kaito.ai/api/v1/gateway/ai/kol/mindshare/top-leaderboard"
+    params = {
+        "topic_id": topic_id,
+        "duration": duration,
+        "top_n": top_n,
+        "customized_community": "customized",
+        "community_yaps": True
+    }
+    headers = {
+        "User-Agent": "Mozilla/5.0",
+        "Accept": "application/json"
+    }
+
     try:
-        folder = os.path.join("kaito_data", topic.lower())  # e.g., kaito_data/hanahana
-        file_path = os.path.join(folder, f"data_{topic}_{duration}.json")
-        with open(file_path, 'r', encoding='utf-8') as f:
-            data = json.load(f)
-            return data[:200]  # Now showing top 200
-    except Exception as e:
-        print(f"Error loading {topic} {duration} data: {e}")
+        response = requests.get(url, params=params, headers=headers)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        print(f"Error fetching {topic_id} {duration}: {e}")
         return []
 
 @app.route("/")
 def index():
-    duration = request.args.get('duration', '7d')
-    topic = request.args.get('topic', 'HANAHANA')
+    topic = request.args.get("topic", "HANAHANA")
+    duration = request.args.get("duration", "7d")
 
-    users = fetch_kaito_data(topic, duration)
+    users = fetch_leaderboard(topic, duration, top_n=200)
 
     return render_template(
         "index.html",
         users=users,
-        duration=duration,
         topic=topic,
-        durations=['7d', '30d', '3m', '6m'],
-        topics=['HANAHANA', 'ANOMA', 'BLS']
+        duration=duration,
+        topics=TOPIC_IDS,
+        durations=DURATIONS
     )
 
 if __name__ == "__main__":

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Mindshare Trend - {{ topic }}</title>
+</head>
+<body>
+  <h1>📈 Mindshare Trend for Topic: {{ topic }}</h1>
+
+  <table border="1" cellpadding="8">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Total Mindshare</th>
+        <th>Top Users Count</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in trend %}
+        <tr>
+          <td>{{ item.date }}</td>
+          <td>{{ "%.4f"|format(item.total_mindshare or 0) }}</td>
+          <td>{{ item.top_users|length }}</td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <br>
+  <a href="/">← Back to Leaderboard</a>
+</body>
+</html>

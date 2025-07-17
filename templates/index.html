@@ -1,15 +1,13 @@
-<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
     <title>Kaito Leaderboard</title>
     <style>
         body {
             font-family: 'Segoe UI', sans-serif;
             background: #f4f6f8;
-            margin: 0;
-            padding: 0;
+            margin: 0; padding: 0;
         }
         header {
             background: #111827;
@@ -23,12 +21,11 @@
             justify-content: center;
             gap: 1rem;
             padding: 1.5rem;
-            background: #ffffff;
+            background: #fff;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
             flex-wrap: wrap;
         }
-        .dropdown-container select,
-        .dropdown-container button {
+        select, button {
             padding: 0.6rem 1rem;
             font-size: 1rem;
             border-radius: 8px;
@@ -36,11 +33,14 @@
             background: #fff;
             min-width: 150px;
         }
-        .dropdown-container button {
+        button {
             background-color: #3b82f6;
             color: white;
-            cursor: pointer;
             border: none;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #2563eb;
         }
         .container {
             max-width: 1000px;
@@ -60,6 +60,7 @@
             height: 64px;
             border-radius: 50%;
             margin-right: 1rem;
+            object-fit: cover;
         }
         .user-details {
             flex: 1;
@@ -88,9 +89,7 @@
     </style>
 </head>
 <body>
-    <header>
-        📊 Kaito Leaderboard — Top 200 Users
-    </header>
+    <header>📊 Kaito Leaderboard — Top 100 Yappers</header>
 
     <div class="dropdown-container">
         <form method="get">
@@ -115,20 +114,20 @@
     <div class="container">
         {% for user in users %}
             <div class="user-card">
-                <img src="{{ user.icon }}" alt="{{ user.username }}">
+                <img src="{{ user.icon }}" alt="{{ user.username }}" />
                 <div class="user-details">
                     <h2>@{{ user.username }}</h2>
                     <p><strong>Name:</strong> {{ user.name }}</p>
                     <p><strong>Rank:</strong> {{ user.rank }}</p>
                     <p><strong>Mentions:</strong> {{ user.mention_count }}</p>
-                    <!-- <p><strong>Insight Score:</strong> {{ user.last_90_day_avg_llm_insightfulness_score_scaled }}</p>
-                    <p><strong>Originality:</strong> {{ user.last_90_day_avg_originality_score_scaled }}</p> -->
                     <p><strong>Smart Followers:</strong> {{ user.smart_follower_count }}</p>
                     <p><strong>Followers:</strong> {{ "{:,}".format(user.follower_count or 0) }}</p>
                     <p><strong>Bio:</strong> {{ user.bio or "No bio available" }}</p>
                     <a href="{{ user.twitter_user_url }}" target="_blank">View Twitter →</a>
                 </div>
             </div>
+        {% else %}
+            <p>No users found for this topic and duration.</p>
         {% endfor %}
     </div>
 
