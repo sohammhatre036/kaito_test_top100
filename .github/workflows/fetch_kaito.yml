@@ -1,0 +1,32 @@
+name: Fetch Kaito Data Hourly
+
+on:
+  schedule:
+    - cron: '0 * * * *'  # Runs every hour (UTC)
+  workflow_dispatch:     # Allow manual trigger from GitHub UI
+
+jobs:
+  run-fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run fetch script
+        run: python fetch_kaito_data.py
+
+      - name: Commit and push changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add kaito_data/
+          git commit -m "🔄 Auto-update data" || echo "No changes"
+          git push
