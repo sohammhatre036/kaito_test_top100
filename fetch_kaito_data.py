@@ -7,7 +7,7 @@ def fetch_kaito_leaderboard(topic_id, duration, subfolder):
     params = {
         'duration': duration,
         'topic_id': topic_id,
-        'top_n': 1000,
+        'top_n': 200,  # 🔧 Set to 200 users
         'customized_community': 'customized',
         'community_yaps': True
     }
@@ -21,6 +21,7 @@ def fetch_kaito_leaderboard(topic_id, duration, subfolder):
         print(f"🔄 Fetching data for topic: {topic_id} | duration: {duration}")
         folder_path = os.path.join("kaito_data", subfolder)
         os.makedirs(folder_path, exist_ok=True)
+
         response = requests.get(url, params=params, headers=headers)
 
         if response.status_code == 200:

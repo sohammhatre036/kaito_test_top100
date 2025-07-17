@@ -10,7 +10,7 @@ def fetch_kaito_data(topic, duration):
         file_path = os.path.join(folder, f"data_{topic}_{duration}.json")
         with open(file_path, 'r', encoding='utf-8') as f:
             data = json.load(f)
-            return data[:100]  # Top 100
+            return data[:200]  # Now showing top 200
     except Exception as e:
         print(f"Error loading {topic} {duration} data: {e}")
         return []
@@ -28,7 +28,7 @@ def index():
         duration=duration,
         topic=topic,
         durations=['7d', '30d', '3m', '6m'],
-        topics=['HANAHANA', 'ANOMA', 'BLS']  # Now includes BLS too
+        topics=['HANAHANA', 'ANOMA', 'BLS']
     )
 
 if __name__ == "__main__":

@@ -1,3 +1,4 @@
+<!-- templates/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -10,7 +11,6 @@
             margin: 0;
             padding: 0;
         }
-
         header {
             background: #111827;
             color: #fff;
@@ -18,7 +18,6 @@
             text-align: center;
             font-size: 1.5rem;
         }
-
         .dropdown-container {
             display: flex;
             justify-content: center;
@@ -28,7 +27,6 @@
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
             flex-wrap: wrap;
         }
-
         .dropdown-container select,
         .dropdown-container button {
             padding: 0.6rem 1rem;
@@ -38,64 +36,48 @@
             background: #fff;
             min-width: 150px;
         }
-
         .dropdown-container button {
             background-color: #3b82f6;
             color: white;
             cursor: pointer;
             border: none;
-            transition: background-color 0.3s ease;
         }
-
-        .dropdown-container button:hover {
-            background-color: #2563eb;
-        }
-
         .container {
             max-width: 1000px;
             margin: 2rem auto;
             padding: 0 1rem;
         }
-
         .user-card {
             display: flex;
-            align-items: flex-start;
             background: #fff;
             margin-bottom: 1rem;
             padding: 1rem;
             border-radius: 12px;
             box-shadow: 0 2px 6px rgba(0,0,0,0.05);
         }
-
         .user-card img {
             width: 64px;
             height: 64px;
             border-radius: 50%;
             margin-right: 1rem;
-            object-fit: cover;
         }
-
         .user-details {
             flex: 1;
         }
-
         .user-details h2 {
             margin: 0;
             font-size: 1.1rem;
         }
-
         .user-details p {
-            margin: 0.3rem 0;
+            margin: 0.2rem 0;
             color: #444;
-            font-size: 0.95rem;
+            font-size: 0.9rem;
         }
-
         .user-details a {
             color: #3b82f6;
             text-decoration: none;
             font-size: 0.9rem;
         }
-
         footer {
             text-align: center;
             color: #888;
@@ -107,32 +89,26 @@
 </head>
 <body>
     <header>
-        📊 Kaito Leaderboard — Top 100 Users
+        📊 Kaito Leaderboard — Top 200 Users
     </header>
 
     <div class="dropdown-container">
-        <form method="get" style="display: flex; gap: 1rem; flex-wrap: wrap;">
-            <div>
-                <label for="topic">Topic:</label><br>
-                <select name="topic" id="topic">
-                    {% for t in topics %}
-                        <option value="{{ t }}" {% if t == topic %}selected{% endif %}>{{ t }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+        <form method="get">
+            <label for="topic">Topic:</label>
+            <select name="topic" id="topic">
+                {% for t in topics %}
+                    <option value="{{ t }}" {% if t == topic %}selected{% endif %}>{{ t }}</option>
+                {% endfor %}
+            </select>
 
-            <div>
-                <label for="duration">Duration:</label><br>
-                <select name="duration" id="duration">
-                    {% for d in durations %}
-                        <option value="{{ d }}" {% if d == duration %}selected{% endif %}>{{ d }}</option>
-                    {% endfor %}
-                </select>
-            </div>
+            <label for="duration">Duration:</label>
+            <select name="duration" id="duration">
+                {% for d in durations %}
+                    <option value="{{ d }}" {% if d == duration %}selected{% endif %}>{{ d }}</option>
+                {% endfor %}
+            </select>
 
-            <div style="align-self: flex-end;">
-                <button type="submit">GO</button>
-            </div>
+            <button type="submit">GO</button>
         </form>
     </div>
 
@@ -143,8 +119,13 @@
                 <div class="user-details">
                     <h2>@{{ user.username }}</h2>
                     <p><strong>Name:</strong> {{ user.name }}</p>
-                    <p><strong>Bio:</strong> {{ user.bio or "No bio available" }}</p>
+                    <p><strong>Rank:</strong> {{ user.rank }}</p>
+                    <p><strong>Mentions:</strong> {{ user.mention_count }}</p>
+                    <!-- <p><strong>Insight Score:</strong> {{ user.last_90_day_avg_llm_insightfulness_score_scaled }}</p>
+                    <p><strong>Originality:</strong> {{ user.last_90_day_avg_originality_score_scaled }}</p> -->
+                    <p><strong>Smart Followers:</strong> {{ user.smart_follower_count }}</p>
                     <p><strong>Followers:</strong> {{ "{:,}".format(user.follower_count or 0) }}</p>
+                    <p><strong>Bio:</strong> {{ user.bio or "No bio available" }}</p>
                     <a href="{{ user.twitter_user_url }}" target="_blank">View Twitter →</a>
                 </div>
             </div>
